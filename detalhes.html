@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Agente</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #24252a;
+            color: white;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 6rem;
+            background-color: rgba(36, 37, 42, 0.8); /* Transparent background */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 1350px;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-image {
+            height: 50px; 
+            width: 80px; 
+        }
+
+        .nav-list ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-item {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 400;
+        }
+
+        .login-button button {
+            background-color: #ff4655;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: "Work Sans", sans-serif;
+            font-weight: weight;
+            font-style: normal;
+        }
+
+        .login-button a{
+            color: white;
+            text-decoration: none;
+        }
+
+        .agent-details {
+            display: flex;
+            align-items: center;
+            background: #38393e;
+            color: black;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 80px auto 20px; /* Adjust margin to account for fixed header */
+            margin-top: 180px;
+            gap: 20px; /* Space between image and text */
+        }
+
+        .agent-details img {
+            width: 40%; /* Adjust the size as needed */
+            height: auto;
+       
+        }
+
+        .agent-details .text-content {
+            width: 60%; /* Adjust the size as needed */
+        }
+
+        .agent-details h1 {
+            margin-top: 0;
+            font-size: 2em;
+            color: #ff4655;
+        }
+
+        .agent-details p {
+            margin: 10px 0;
+            color: white;
+
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="nav-bar">
+            <div class="logo">
+                <!-- Use o caminho correto para sua imagem -->
+                <img src="img/LogRiot.png" alt="Logo Riot" class="logo-image">
+                <a href="./teste.html">
+                    <img src="img/LogoValorant.png" alt="Logo Riot" class="logo-image">
+                </a>
+            </div>
+            <div class="login-button">
+                <button><a href="https://playvalorant.com/pt-br/?gad_source=1&gclid=CjwKCAjwxNW2BhAkEiwA24Cm9MYsMPKy1PQmNCE7iCMuejbAqXr5b2OENLnqdSm40oOyVQH_RVg6tRoC0aYQAvD_BwE&gclsrc=aw.ds">Jogue Agora</a></button>
+            </div>
+        </nav>
+    </header>
+    <div class="agent-details" id="agentDetails">
+        <!-- Detalhes do agente vão aparecer aqui -->
+    </div>
+
+    <script>
+        // Função para obter parâmetros da URL
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // Função para carregar detalhes do agente
+        function loadAgentDetails() {
+            const agentId = getQueryParam('id');
+            if (agentId) {
+                const url = `https://valorant-api.com/v1/agents/${agentId}`;
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        const agent = data.data;
+                        const agentDetails = document.getElementById('agentDetails');
+                        agentDetails.innerHTML = `
+                            <img src="${agent.fullPortrait || agent.bustPortrait || agent.displayIcon}" alt="${agent.displayName}">
+                            <div class="text-content">
+                                <h1>${agent.displayName}</h1>
+                                <p><strong>Descrição:</strong> ${agent.description || 'Descrição não disponível'}</p>
+                                <p><strong>Habilidades:</strong> ${agent.abilities.map(a => a.displayName).join(', ')}</p>
+                            </div>
+                        `;
+                    })
+                    .catch(error => {
+                        console.error('Erro ao buscar detalhes do agente:', error);
+                    });
+            } else {
+                console.error('ID do agente não fornecido');
+            }
+        }
+
+        // Carregar detalhes ao iniciar
+        loadAgentDetails();
+    </script>
+</body>
+</html>
